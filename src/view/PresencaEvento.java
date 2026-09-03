@@ -101,7 +101,6 @@ public class PresencaEvento extends JFrame {
 		panel.add(textField_1);
 		textField_1.setColumns(10);
 
-		
 		textField_1.getDocument().addDocumentListener(new DocumentListener() {
 			public void insertUpdate(DocumentEvent e) {
 				verificarDisponibilidadeWorkshop(textField_1.getText().trim(), false);
@@ -198,7 +197,6 @@ public class PresencaEvento extends JFrame {
 			}
 		));
 
-		
 		JButton btnNewButton_3 = new JButton("Limpar");
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -218,27 +216,19 @@ public class PresencaEvento extends JFrame {
 		btnNewButton_4.setBounds(250, 500, 140, 35);
 		panel.add(btnNewButton_4);
 
+		// NAVEGAÇÃO: PresencaEvento -> JFila
 		JButton btnFila = new JButton("Fila");
 		btnFila.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String cpf = textField.getText().trim();
-				String codigo = textField_1.getText().trim();
 
-				if (cpf.isEmpty() || codigo.isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Preencha o CPF e o código do workshop!");
-					return;
-				}
+				JFila fila = new JFila();
 
-				int status = obterVagasWorkshop(codigo);
+				fila.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-				if (status == -1) {
-					JOptionPane.showMessageDialog(null, "Código de workshop não encontrado!");
-				} else if (status > 0) {
-					JOptionPane.showMessageDialog(null, "Este workshop possui vagas disponíveis. Utilize o botão 'Concluir' para confirmar a participação.");
-				} else {
-					JOptionPane.showMessageDialog(null, "Aluno adicionado à fila de espera com sucesso!");
-					limparCampos();
-				}
+				fila.setVisible(true);
+
+				dispose();
+
 			}
 		});
 		btnFila.setBounds(420, 500, 140, 35);
@@ -285,7 +275,6 @@ public class PresencaEvento extends JFrame {
 		centralizarPainel();
 	}
 
-	
 	private void verificarDisponibilidadeWorkshop(String codigo, boolean exibirMensagem) {
 		if (codigo.isEmpty()) {
 			resetarStatus();
@@ -320,7 +309,6 @@ public class PresencaEvento extends JFrame {
 		}
 	}
 
-	
 	private int obterVagasWorkshop(String codigo) {
 		DefaultTableModel modelo = (DefaultTableModel) table.getModel();
 		for (int i = 0; i < modelo.getRowCount(); i++) {
