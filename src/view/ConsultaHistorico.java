@@ -164,11 +164,7 @@ public class ConsultaHistorico extends JFrame {
 		panel.add(scroll);
 
 		Object[][] dados = {
-				{"2001", "Antony dos Santos Marques", "000.000.000-00", "Workshop", "10/08/2026", "Presente", "Concluído"},
-				{"2002", "Iasmyn Almeida Matias", "111.111.111-11", "Aula", "11/08/2026", "Presente", "Concluído"},
-				{"2003", "Jean Mendes da Silva", "222.222.222-22", "Workshop", "12/08/2026", "Ausente", "Concluído"},
-				{"2004", "Maria Natália Mendonça da Silva", "333.333.333-33", "Aula", "15/08/2026", "Presente", "Concluído"},
-				{"2005", "Saulo Oliveira de Araújo", "444.444.444-44", "Workshop", "20/08/2026", "Presente", "Concluído"}
+				
 		};
 
 		for (Object[] linha : dados) {
