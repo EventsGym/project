@@ -37,8 +37,6 @@ public class JFila extends JFrame {
 	private static final int PANEL_WIDTH = 810;
 	private static final int PANEL_HEIGHT = 570;
 	private Map<String, Integer> capacidadeMaxima;
-
-
 	private Map<String, Integer> vagasOcupadas;
 
 	public static void main(String[] args) {
@@ -179,7 +177,15 @@ public class JFila extends JFrame {
 		JButton btnVoltar = new JButton("Voltar");
 		btnVoltar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+
+				PresencaEvento presenca = new PresencaEvento();
+
+				presenca.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+				presenca.setVisible(true);
+
 				dispose();
+
 			}
 		});
 		btnVoltar.setBounds(315, 510, 180, 35);
@@ -216,7 +222,6 @@ public class JFila extends JFrame {
 					return;
 				}
 
-	
 				if (!chckbxNewCheckBox.isSelected()) {
 					JOptionPane.showMessageDialog(null,
 							"Marque a opção \"Inserir aluno na lista de "
