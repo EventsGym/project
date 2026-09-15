@@ -21,6 +21,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import monitorarvagas.monitorarvagas_tela;
+
 public class ConsultaHistorico extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -308,7 +310,12 @@ public class ConsultaHistorico extends JFrame {
 
 		});
 
-		btnFechar.addActionListener(e -> dispose());
+		btnFechar.addActionListener(e -> {
+			monitorarvagas_tela monitorar = new monitorarvagas_tela();
+			monitorar.setExtendedState(JFrame.MAXIMIZED_BOTH);
+			monitorar.setVisible(true);
+			dispose();
+		});
 
 		addComponentListener(new ComponentAdapter() {
 
