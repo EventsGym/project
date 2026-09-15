@@ -19,6 +19,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
+import monitorarvagas.monitorarvagas_tela;
+
 public class manterworkshop_tela extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -245,6 +247,29 @@ public class manterworkshop_tela extends JFrame {
 		btnLimpar.setBounds(500, 195, 100, 30);
 
 		panel.add(btnLimpar);
+
+		JButton btnVoltar = new JButton("Voltar");
+
+		btnVoltar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+
+		btnVoltar.setBounds(610, 195, 100, 30);
+
+		panel.add(btnVoltar);
+
+		btnVoltar.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+
+				monitorarvagas_tela monitorar = new monitorarvagas_tela();
+
+				monitorar.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+				monitorar.setVisible(true);
+
+				dispose();
+
+			}
+		});
 
 		modelo = new DefaultTableModel(
 
