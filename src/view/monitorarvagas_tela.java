@@ -20,6 +20,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
+import view.ConsultaHistorico;
+import view.PresencaEvento;
+import manterworkshop.manterworkshop_tela;
+
 public class monitorarvagas_tela extends JFrame {
 
     private static final long serialVersionUID = 1L;
@@ -206,13 +210,74 @@ public class monitorarvagas_tela extends JFrame {
 
         panel.add(btnLimpar);
 
-        JButton btnFechar = new JButton("Fechar");
+        JButton btnWorkshop = new JButton("Workshop");
 
-        btnFechar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        btnWorkshop.setFont(new Font("Tahoma", Font.PLAIN, 14));
 
-        btnFechar.setBounds(559, 148, 110, 30);
+        btnWorkshop.setBounds(559, 148, 110, 30);
 
-        panel.add(btnFechar);
+        panel.add(btnWorkshop);
+
+        JButton btnPresenca = new JButton("Presença");
+
+        btnPresenca.setFont(new Font("Tahoma", Font.PLAIN, 14));
+
+        btnPresenca.setBounds(679, 148, 110, 30);
+
+        panel.add(btnPresenca);
+
+        JButton btnHistorico = new JButton("Histórico");
+
+        btnHistorico.setFont(new Font("Tahoma", Font.PLAIN, 14));
+
+        btnHistorico.setBounds(779, 148, 110, 30);
+
+        panel.add(btnHistorico);
+
+        btnWorkshop.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+
+                manterworkshop_tela workshop = new manterworkshop_tela();
+
+                workshop.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+                workshop.setVisible(true);
+
+                dispose();
+
+            }
+        });
+
+        btnPresenca.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+
+                PresencaEvento presenca = new PresencaEvento();
+
+                presenca.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+                presenca.setVisible(true);
+
+                dispose();
+
+            }
+        });
+
+        btnHistorico.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+
+                ConsultaHistorico historico = new ConsultaHistorico();
+
+                historico.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+                historico.setVisible(true);
+
+                dispose();
+
+            }
+        });
 
         modelo = new DefaultTableModel(
             new Object[][] {},
@@ -279,14 +344,6 @@ public class monitorarvagas_tela extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 limparCampos();
-            }
-        });
-
-        btnFechar.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-
-                dispose();
             }
         });
 
