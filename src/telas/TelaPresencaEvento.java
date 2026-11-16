@@ -27,7 +27,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class TelaPresencaEvento extends JFrame {
 
-	// Objeto da camada de negócio associado a esta tela.
+	
 	private final Presenca presencaNegocio = new Presenca();
 
 
@@ -131,6 +131,7 @@ public class TelaPresencaEvento extends JFrame {
 					JOptionPane.showMessageDialog(null, "Preencha o CPF e o código do workshop!");
 					return;
 				}
+                if(!cpf.replaceAll("\\D", "").matches("\\d{11}")) { JOptionPane.showMessageDialog(TelaPresencaEvento.this,"CPF deve conter 11 números."); return; }
 
 				DefaultTableModel modelo = (DefaultTableModel) table.getModel();
 				boolean encontrado = false;
@@ -143,6 +144,13 @@ public class TelaPresencaEvento extends JFrame {
 						int vagas = Integer.parseInt(modelo.getValueAt(i, 2).toString());
 
 						if (vagas > 0) {
+                            try {
+                                presencaNegocio.setCpf(cpf.replaceAll("\\D", ""));
+                                presencaNegocio.setCodigoWorkshop(Integer.parseInt(codigo));
+                                presencaNegocio.setData(java.time.LocalDate.now().toString());
+                                presencaNegocio.setStatus("Presente");
+                                presencaNegocio.cadastrar();
+                            } catch(Exception erro) { JOptionPane.showMessageDialog(TelaPresencaEvento.this, "Falha ao registrar presença: " + erro.getMessage()); return; }
 							vagas--;
 							modelo.setValueAt(String.valueOf(vagas), i, 2);
 							JOptionPane.showMessageDialog(null, "Presença salva com sucesso!");
@@ -193,15 +201,20 @@ public class TelaPresencaEvento extends JFrame {
 		scrollPane.setViewportView(table);
 
 		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{"Musculação", "1234", "30"},
-				{"Pilates", "5678", "15"},
-				{"Nutrição", "8971", "0"}, 
-			},
+			new Object[][] {},
 			new String[] {
 				"Título", "Código:", "Vagas:"
 			}
 		));
+        try {
+            DefaultTableModel tm=(DefaultTableModel)table.getModel();
+            for(Object[] w : new negocio.MonitorarVagas().listar()) tm.addRow(new Object[]{w[1],w[0],w[5]});
+        } catch(Exception erro) { JOptionPane.showMessageDialog(this,"Falha ao carregar workshops: "+erro.getMessage()); }
+        table.getSelectionModel().addListSelectionListener(e -> {
+            if(!e.getValueIsAdjusting() && table.getSelectedRow()>=0) {
+                int row=table.getSelectedRow(); textField_1.setText(table.getValueAt(row,1).toString());
+            }
+        });
 
 		JButton btnNewButton_3 = new JButton("Limpar");
 		btnNewButton_3.addActionListener(new ActionListener() {
@@ -250,12 +263,13 @@ public class TelaPresencaEvento extends JFrame {
 					JOptionPane.showMessageDialog(null, "Preencha o CPF e o código do workshop!");
 					return;
 				}
+                if(!cpf.replaceAll("\\D", "").matches("\\d{11}")) { JOptionPane.showMessageDialog(TelaPresencaEvento.this,"CPF deve conter 11 números."); return; }
 
 				int vagas = obterVagasWorkshop(codigo);
 
 				if (vagas == -1) {
 					JOptionPane.showMessageDialog(null, "Código do workshop não encontrado!");
-				} else if (vagas == 0) {
+				} else if (vagas <= 0) {
 					JOptionPane.showMessageDialog(null, "Workshop sem vagas disponíveis! Utilize o botão 'Fila' para entrar na fila de espera.");
 				} else {
 					JOptionPane.showMessageDialog(null, "Presença no evento concluída com sucesso!");
@@ -298,7 +312,7 @@ public class TelaPresencaEvento extends JFrame {
 			if (exibirMensagem) {
 				JOptionPane.showMessageDialog(null, "Workshop encontrado!\nVagas restantes: " + vagas);
 			}
-		} else if (vagas == 0) {
+		} else if (vagas <= 0) {
 			rdbtnNewRadioButton.setSelected(false);
 			rdbtnNewRadioButton_1.setSelected(true);
 			rdbtnNewRadioButton_1.setForeground(Color.RED); 
