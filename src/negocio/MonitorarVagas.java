@@ -2,12 +2,14 @@ package negocio;
 
 import DAO.MonitorarVagasDAO;
 import java.sql.SQLException;
+import java.util.List;
 
-/** Regras de negócio da consulta de vagas de workshops. */
 public class MonitorarVagas {
     private int codigoWorkshop;
 
     public void setCodigoWorkshop(int codigoWorkshop) { this.codigoWorkshop = codigoWorkshop; }
+
+    public List<Object[]> listar() throws SQLException { return new MonitorarVagasDAO().listar(); }
 
     public String consultar() throws SQLException, ClassNotFoundException {
         if (codigoWorkshop <= 0) {
