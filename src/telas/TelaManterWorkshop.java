@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -333,97 +334,28 @@ public class TelaManterWorkshop extends JFrame {
 		});
 
 		btnSalvar.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-
-				modelo.addRow(new Object[] {
-
-					txtCodigo.getText(),
-
-					txtTitulo.getText(),
-
-					txtInstrutor.getText(),
-
-					txtData.getText(),
-
-					txtCarga.getText(),
-
-					txtVagas.getText(),
-
-					txtLocal.getText()
-
-				});
-
-			}
-
-		});
+            public void actionPerformed(ActionEvent e) {
+                try { preencherWorkshop(); JOptionPane.showMessageDialog(TelaManterWorkshop.this, workshopNegocio.cadastrar()); carregarWorkshops(); limparCampos(); }
+                catch (Exception erro) { JOptionPane.showMessageDialog(TelaManterWorkshop.this, "Falha ao salvar: " + erro.getMessage()); }
+            }
+        });
 
 		btnAlterar.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-
-				int linha = tableWorkshop.getSelectedRow();
-
-				if (linha >= 0) {
-
-					modelo.setValueAt(
-						txtCodigo.getText(),
-						linha,
-						0
-					);
-
-					modelo.setValueAt(
-						txtTitulo.getText(),
-						linha,
-						1
-					);
-
-					modelo.setValueAt(
-						txtInstrutor.getText(),
-						linha,
-						2
-					);
-
-					modelo.setValueAt(
-						txtData.getText(),
-						linha,
-						3
-					);
-
-					modelo.setValueAt(
-						txtCarga.getText(),
-						linha,
-						4
-					);
-
-					modelo.setValueAt(
-						txtVagas.getText(),
-						linha,
-						5
-					);
-
-					modelo.setValueAt(
-						txtLocal.getText(),
-						linha,
-						6
-					);
-				}
-			}
-		});
+            public void actionPerformed(ActionEvent e) {
+                if(tableWorkshop.getSelectedRow()<0) { JOptionPane.showMessageDialog(TelaManterWorkshop.this,"Selecione um workshop para alterar."); return; }
+                try { preencherWorkshop(); JOptionPane.showMessageDialog(TelaManterWorkshop.this, workshopNegocio.alterar()); carregarWorkshops(); limparCampos(); }
+                catch (Exception erro) { JOptionPane.showMessageDialog(TelaManterWorkshop.this, "Falha ao alterar: " + erro.getMessage()); }
+            }
+        });
 
 		btnExcluir.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-
-				int linha = tableWorkshop.getSelectedRow();
-
-				if (linha >= 0) {
-
-					modelo.removeRow(linha);
-
-				}
-			}
-		});
+            public void actionPerformed(ActionEvent e) {
+                int linha=tableWorkshop.getSelectedRow();
+                if(linha<0) { JOptionPane.showMessageDialog(TelaManterWorkshop.this,"Selecione um workshop para excluir."); return; }
+                try { workshopNegocio.setCodigo(Integer.parseInt(modelo.getValueAt(linha,0).toString())); JOptionPane.showMessageDialog(TelaManterWorkshop.this,workshopNegocio.excluir()); carregarWorkshops(); limparCampos(); }
+                catch(Exception erro) { JOptionPane.showMessageDialog(TelaManterWorkshop.this,"Não foi possível excluir: "+erro.getMessage()); }
+            }
+        });
 
 		btnLimpar.addActionListener(new ActionListener() {
 
@@ -475,6 +407,7 @@ public class TelaManterWorkshop extends JFrame {
 				}
 			}
 		);
+        carregarWorkshops();
 	}
 
 	private void centralizarFormulario() {
@@ -486,6 +419,20 @@ public class TelaManterWorkshop extends JFrame {
 		panel.setLocation(x, y);
 	}
 
+
+    private void preencherWorkshop() {
+        workshopNegocio.setCodigo(Integer.parseInt(txtCodigo.getText().trim()));
+        workshopNegocio.setTitulo(txtTitulo.getText().trim());
+        workshopNegocio.setInstrutor(txtInstrutor.getText().trim());
+        workshopNegocio.setData(txtData.getText().trim());
+        workshopNegocio.setCarga(txtCarga.getText().trim());
+        workshopNegocio.setVagas(Integer.parseInt(txtVagas.getText().trim()));
+        workshopNegocio.setLocal(txtLocal.getText().trim());
+    }
+    private void carregarWorkshops() {
+        try { modelo.setRowCount(0); for(Object[] linha: workshopNegocio.listar()) modelo.addRow(linha); }
+        catch(Exception erro) { JOptionPane.showMessageDialog(this,"Não foi possível carregar workshops: "+erro.getMessage()); }
+    }
 	private void limparCampos() {
 
 		txtCodigo.setText("");
