@@ -1,6 +1,7 @@
 package negocio;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import DAO.WorkshopDAO;
 
@@ -22,11 +23,13 @@ public class Workshop {
 	public void setLocal(String local) { this.local = local; }
 	
 	public String cadastrar() throws SQLException, ClassNotFoundException {
+        validar();
 		WorkshopDAO objeto = criarDAO();
 		return objeto.cadastrar();
 	}
 	
 	public String alterar() throws SQLException, ClassNotFoundException {
+        validar();
 		WorkshopDAO objeto = criarDAO();
 		return objeto.alterar();
 	}
@@ -36,6 +39,11 @@ public class Workshop {
 		return objeto.excluir();
 	}
 	
+	public List<Object[]> listar() throws SQLException { return new WorkshopDAO().listar(); }
+	
+    private void validar() {
+        if(codigo<=0 || vagas<0 || titulo==null || titulo.trim().isEmpty() || instrutor==null || instrutor.trim().isEmpty() || data==null || data.trim().isEmpty() || carga==null || carga.trim().isEmpty() || local==null || local.trim().isEmpty()) throw new IllegalArgumentException("Preencha todos os campos e informe código/vagas válidos.");
+    }
 	private WorkshopDAO criarDAO() {
 		WorkshopDAO objeto = new WorkshopDAO();
 		objeto.setCodigo(this.codigo);
