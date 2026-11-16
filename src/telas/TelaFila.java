@@ -167,6 +167,8 @@ public class TelaFila extends JFrame {
 		table.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		table.setRowHeight(22);
 		scrollPane.setViewportView(table);
+        try { for(Object[] linha : filaNegocio.listar()) modeloFila.addRow(linha); }
+        catch(Exception erro) { JOptionPane.showMessageDialog(this, "Falha ao carregar fila: " + erro.getMessage()); }
 
 		JButton btnLimpar = new JButton("Limpar");
 		btnLimpar.addActionListener(new ActionListener() {
@@ -255,6 +257,10 @@ public class TelaFila extends JFrame {
 					}
 				}
 
+                try {
+                    filaNegocio.setPosicao(posicao); filaNegocio.setAluno(aluno); filaNegocio.setEvento(evento.toString());
+                    filaNegocio.cadastrar();
+                } catch (Exception erro) { JOptionPane.showMessageDialog(null, "Não foi possível gravar a fila: " + erro.getMessage()); return; }
 				modeloFila.addRow(new Object[] { posicao, aluno, evento });
 
 				JOptionPane.showMessageDialog(null,
