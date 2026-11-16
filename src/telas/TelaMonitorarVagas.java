@@ -299,6 +299,8 @@ public class TelaMonitorarVagas extends JFrame {
         tableVagas.setFont(new Font("Tahoma", Font.PLAIN, 13));
 
         tableVagas.setRowHeight(25);
+        try { for(Object[] item : monitorarVagasNegocio.listar()) modelo.addRow(item); }
+        catch(Exception erro) { JOptionPane.showMessageDialog(this,"Falha ao carregar vagas: "+erro.getMessage()); }
 
         JScrollPane scrollPane = new JScrollPane(tableVagas);
 
@@ -328,8 +330,6 @@ public class TelaMonitorarVagas extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 calcularVaga();
-
-                adicionarVaga();
             }
         });
 
@@ -457,90 +457,12 @@ public class TelaMonitorarVagas extends JFrame {
     }
 
     private void atualizarVaga() {
-
-        int linha = tableVagas.getSelectedRow();
-
-        if (linha == -1) {
-
-            JOptionPane.showMessageDialog(
-                this,
-                "Selecione uma vaga na tabela."
-            );
-
-            return;
-        }
-
         try {
-
-            int vagas = Integer.parseInt(txtVagas.getText());
-
-            int inscritos = Integer.parseInt(txtInscritos.getText());
-
-            int disponiveis = vagas - inscritos;
-
-            String status;
-
-            if (disponiveis <= 0) {
-
-                status = "LOTADO";
-
-            } else {
-
-                status = "DISPONÍVEL";
-            }
-
-            modelo.setValueAt(
-                txtCodigo.getText(),
-                linha,
-                0
-            );
-
-            modelo.setValueAt(
-                txtTitulo.getText(),
-                linha,
-                1
-            );
-
-            modelo.setValueAt(
-                txtData.getText(),
-                linha,
-                2
-            );
-
-            modelo.setValueAt(
-                vagas,
-                linha,
-                3
-            );
-
-            modelo.setValueAt(
-                inscritos,
-                linha,
-                4
-            );
-
-            modelo.setValueAt(
-                disponiveis,
-                linha,
-                5
-            );
-
-            modelo.setValueAt(
-                status,
-                linha,
-                6
-            );
-
-            txtDisponiveis.setText(
-                String.valueOf(disponiveis)
-            );
-
-        } catch (NumberFormatException e) {
-
-            JOptionPane.showMessageDialog(
-                this,
-                "Digite números válidos em Vagas e Inscritos."
-            );
+            modelo.setRowCount(0);
+            for(Object[] item : monitorarVagasNegocio.listar()) modelo.addRow(item);
+            JOptionPane.showMessageDialog(this, "Dados de vagas atualizados a partir do banco.");
+        } catch(Exception erro) {
+            JOptionPane.showMessageDialog(this, "Falha ao atualizar vagas: " + erro.getMessage());
         }
     }
 
