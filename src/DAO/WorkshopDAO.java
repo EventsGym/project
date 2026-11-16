@@ -1,48 +1,13 @@
 package DAO;
-
-import java.sql.SQLException;
-
+import java.sql.*; import java.util.*;
 public class WorkshopDAO {
-    private int codigo;
-    private String titulo;
-    private String instrutor;
-    private String data;
-    private String carga;
-    private int vagas;
-    private String local;
-
-    public void setCodigo(int codigo) { this.codigo = codigo; }
-    public void setTitulo(String titulo) { this.titulo = titulo; }
-    public void setInstrutor(String instrutor) { this.instrutor = instrutor; }
-    public void setData(String data) { this.data = data; }
-    public void setCarga(String carga) { this.carga = carga; }
-    public void setVagas(int vagas) { this.vagas = vagas; }
-    public void setLocal(String local) { this.local = local; }
-
-    public String cadastrar() throws SQLException, ClassNotFoundException {
-        Conexao objeto = new Conexao();
-        String sql = "INSERT INTO workshops (codigo, titulo, instrutor, data, carga, vagas, local) "
-                + "VALUES (" + this.codigo + ", '" + this.titulo + "', '" + this.instrutor + "', '" + this.data + "', '" + this.carga + "', " + this.vagas + ", '" + this.local + "');";
-        objeto.setSQL(sql);
-        objeto.update();
-        return "Cadastrado com Sucesso";
-    }
-
-    public String alterar() throws SQLException, ClassNotFoundException {
-        Conexao objeto = new Conexao();
-        String sql = "UPDATE workshops SET titulo='" + this.titulo + "', instrutor='" + this.instrutor
-                + "', data='" + this.data + "', carga='" + this.carga + "', vagas=" + this.vagas
-                + ", local='" + this.local + "' WHERE codigo=" + this.codigo + ";";
-        objeto.setSQL(sql);
-        objeto.update();
-        return "Alterado com Sucesso";
-    }
-
-    public String excluir() throws SQLException, ClassNotFoundException {
-        Conexao objeto = new Conexao();
-        String sql = "DELETE FROM workshops WHERE codigo=" + this.codigo + ";";
-        objeto.setSQL(sql);
-        objeto.update();
-        return "Excluído com Sucesso";
-    }
+ private int codigo,vagas; private String titulo,instrutor,data,carga,local;
+ public void setCodigo(int v){codigo=v;} public void setTitulo(String v){titulo=v;} public void setInstrutor(String v){instrutor=v;} public void setData(String v){data=v;} public void setCarga(String v){carga=v;} public void setVagas(int v){vagas=v;} public void setLocal(String v){local=v;}
+ private java.sql.Date dataSql() { if(data==null||data.trim().isEmpty()) throw new IllegalArgumentException("Informe a data do workshop (dd/MM/aaaa ou aaaa-MM-dd)."); String d=data.trim(); if(d.matches("\\d{2}/\\d{2}/\\d{4}")){String[] x=d.split("/");d=x[2]+"-"+x[1]+"-"+x[0];} return java.sql.Date.valueOf(d); }
+ private void preencher(PreparedStatement p)throws SQLException{p.setString(1,titulo);p.setString(2,instrutor);p.setDate(3,dataSql());p.setString(4,carga);p.setInt(5,vagas);p.setString(6,local);}
+ public String cadastrar()throws SQLException{try(Connection c=Conexao.abrir();PreparedStatement p=c.prepareStatement("INSERT INTO workshops(codigo,titulo,instrutor,data,carga,vagas,local) VALUES(?,?,?,?,?,?,?)")){p.setInt(1,codigo);p.setString(2,titulo);p.setString(3,instrutor);p.setDate(4,dataSql());p.setString(5,carga);p.setInt(6,vagas);p.setString(7,local);p.executeUpdate();return "Workshop cadastrado.";}}
+ public String alterar()throws SQLException{try(Connection c=Conexao.abrir();PreparedStatement p=c.prepareStatement("UPDATE workshops SET titulo=?,instrutor=?,data=?,carga=?,vagas=?,local=? WHERE codigo=?")){preencher(p);p.setInt(7,codigo);int n=p.executeUpdate();return n>0?"Workshop alterado.":"Código não encontrado.";}}
+ public String excluir()throws SQLException{try(Connection c=Conexao.abrir();PreparedStatement p=c.prepareStatement("DELETE FROM workshops WHERE codigo=?")){p.setInt(1,codigo);int n=p.executeUpdate();return n>0?"Workshop excluído.":"Código não encontrado.";}}
+ public List<Object[]> listar()throws SQLException{List<Object[]> l=new ArrayList<>();try(Connection c=Conexao.abrir();PreparedStatement p=c.prepareStatement("SELECT codigo,titulo,instrutor,data,carga,vagas,local FROM workshops ORDER BY codigo");ResultSet r=p.executeQuery()){while(r.next())l.add(new Object[]{r.getInt(1),r.getString(2),r.getString(3),r.getString(4),r.getString(5),r.getInt(6),r.getString(7)});}return l;}
+ public Object[] buscar(int cod)throws SQLException{try(Connection c=Conexao.abrir();PreparedStatement p=c.prepareStatement("SELECT codigo,titulo,data,vagas,(SELECT COUNT(*) FROM presencas pr WHERE pr.codigo_workshop=w.codigo AND pr.status='Presente') inscritos FROM workshops w WHERE codigo=?")){p.setInt(1,cod);try(ResultSet r=p.executeQuery()){if(!r.next())return null;return new Object[]{r.getInt(1),r.getString(2),r.getString(3),r.getInt(4),r.getInt(5),r.getInt(4)-r.getInt(5)};}}}
 }
