@@ -1,0 +1,10 @@
+digraph EVG {
+ graph [rankdir=LR, splines=ortho, nodesep=0.7, ranksep=1.0, bgcolor="white", label="EventsGym (EVG) — Modelo Relacional Normalizado", labelloc=t, fontsize=18];
+ node [shape=plain, fontname="Arial"];
+ edge [fontname="Arial", fontsize=10, dir=both, arrowtail=none, arrowhead=crow];
+ usuarios [label=< <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0"><TR><TD BGCOLOR="#dce8f5"><B>USUARIOS</B></TD></TR><TR><TD ALIGN="LEFT">PK id_usuario</TD></TR><TR><TD ALIGN="LEFT">nome</TD></TR><TR><TD ALIGN="LEFT">usuario (UNIQUE)</TD></TR><TR><TD ALIGN="LEFT">email (UNIQUE)</TD></TR><TR><TD ALIGN="LEFT">senha (hash PBKDF2)</TD></TR><TR><TD ALIGN="LEFT">salt</TD></TR><TR><TD ALIGN="LEFT">cpf (UNIQUE, opcional)</TD></TR></TABLE> >];
+ workshops [label=< <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0"><TR><TD BGCOLOR="#dce8f5"><B>WORKSHOPS</B></TD></TR><TR><TD ALIGN="LEFT">PK codigo</TD></TR><TR><TD ALIGN="LEFT">titulo</TD></TR><TR><TD ALIGN="LEFT">instrutor</TD></TR><TR><TD ALIGN="LEFT">data</TD></TR><TR><TD ALIGN="LEFT">carga</TD></TR><TR><TD ALIGN="LEFT">vagas</TD></TR><TR><TD ALIGN="LEFT">local</TD></TR></TABLE> >];
+ fila [label=< <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0"><TR><TD BGCOLOR="#dce8f5"><B>FILA_ESPERA</B></TD></TR><TR><TD ALIGN="LEFT">PK id_fila</TD></TR><TR><TD ALIGN="LEFT">posicao</TD></TR><TR><TD ALIGN="LEFT">aluno</TD></TR><TR><TD ALIGN="LEFT">evento</TD></TR><TR><TD ALIGN="LEFT">criado_em</TD></TR></TABLE> >];
+ presencas [label=< <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0"><TR><TD BGCOLOR="#dce8f5"><B>PRESENCAS</B></TD></TR><TR><TD ALIGN="LEFT">PK id_presenca</TD></TR><TR><TD ALIGN="LEFT">cpf</TD></TR><TR><TD ALIGN="LEFT">FK codigo_workshop</TD></TR><TR><TD ALIGN="LEFT">data</TD></TR><TR><TD ALIGN="LEFT">status</TD></TR></TABLE> >];
+ workshops -> presencas [label="1 para N\nON DELETE RESTRICT"];
+}
