@@ -1,6 +1,7 @@
 package negocio;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import DAO.FilaDAO;
 
@@ -13,6 +14,7 @@ public class Fila {
 	public void setAluno(String aluno) { this.aluno = aluno; }
 	public void setEvento(String evento) { this.evento = evento; }
 	
+	public List<Object[]> listar() throws SQLException { return new FilaDAO().listar(); }
 	public String cadastrar() throws SQLException, ClassNotFoundException {
 		FilaDAO objeto = new FilaDAO();
 		objeto.setPosicao(this.posicao);
