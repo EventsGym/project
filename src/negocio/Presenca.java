@@ -1,6 +1,7 @@
 package negocio;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import DAO.PresencaDAO;
 
@@ -15,6 +16,7 @@ public class Presenca {
 	public void setData(String data) { this.data = data; }
 	public void setStatus(String status) { this.status = status; }
 	
+	public List<Object[]> listar(String cpf) throws SQLException { return new PresencaDAO().listar(cpf); }
 	public String cadastrar() throws SQLException, ClassNotFoundException {
 		PresencaDAO objeto = new PresencaDAO();
 		objeto.setCpf(this.cpf);
