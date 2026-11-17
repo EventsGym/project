@@ -4,17 +4,20 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/** Centraliza a abertura de conexoes JDBC. Configure as variaveis EVG_DB_URL, EVG_DB_USER e EVG_DB_PASSWORD. */
-public final class Conexao {
-    private static final String URL_PADRAO = "jdbc:mysql://localhost:3306/projeto?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
-    private Conexao() { }
+public class Conexao {
+    private static String env(String k, String def) {
+        String v = System.getenv(k);
+        return (v == null || v.isEmpty()) ? def : v;
+    }
+
     public static Connection abrir() throws SQLException {
-        String url = System.getenv("EVG_DB_URL");
-        String usuario = System.getenv("EVG_DB_USER");
-        String senha = System.getenv("EVG_DB_PASSWORD");
-        if (url == null || url.trim().isEmpty()) url = URL_PADRAO;
-        if (usuario == null) usuario = "root";
-        if (senha == null) senha = "saulo24";
-        return DriverManager.getConnection(url, usuario, senha);
+        String url = env("EVG_DB_URL",
+            "jdbc:mysql://localhost:3306/projeto?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true");
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new SQLException("Driver MySQL Connector/J não encontrado no Build Path.", e);
+        }
+        return DriverManager.getConnection(url, env("EVG_DB_USER", "root"), env("EVG_DB_PASSWORD", ""));
     }
 }
