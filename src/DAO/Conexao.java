@@ -18,6 +18,6 @@ public class Conexao {
         } catch (ClassNotFoundException e) {
             throw new SQLException("Driver MySQL Connector/J não encontrado no Build Path.", e);
         }
-        return DriverManager.getConnection(url, env("EVG_DB_USER", "root"), env("EVG_DB_PASSWORD", ""));
+        return DriverManager.getConnection(url, env("EVG_DB_USER", "root"), env("EVG_DB_PASSWORD", "saulo24"));
     }
 }
